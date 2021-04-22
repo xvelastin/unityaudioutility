@@ -1,5 +1,5 @@
 # unityaudioutility
-Collection of c# scripts for Unity audio implementation.
+Constantly growing collection of c# scripts for Unity audio implementation.
 Unfinished and undocumented.
 
 ## AudioSourceFader
