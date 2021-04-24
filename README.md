@@ -2,11 +2,25 @@
 Constantly growing collection of c# scripts for Unity audio implementation.
 Unfinished and undocumented.
 
-## AudioSourceFader
-Creates natural sounding fades that can be accessed without scripting (Unity Events). Attach to a gameobject in a scene with an audiosource component. Fade curve editable in inspector or with an argument (c# calls only). Created for Limbik Theatre's audio play Pangea.
 
-## FadeAudioInDb
-static script for quick control of natural sounding fades, based on the same principle as audiosourcefader.
+## Audio Function Scripts
 
-## Music
-some simple sequencing etc. scripts for unity
+**AudioSourceFader:** Creates natural sounding fades that can be accessed without scripting (Unity Events). Attach to a gameobject in a scene with an audiosource component. Fade curve editable in inspector or with an argument (c# calls only). Created for Limbik Theatre's audio play Pangea.
+
+**AudioUtility:** a stanley knife of useful tools.
+
+**fadeInOnAwake:** very simple script, does what it says.
+
+**outputGain & jitterGain:** outputGain takes over an audiosource's volume control, letting you control it in decibels (loudness) for more precise control. The jitterGain script applies a smoothed randomness to outputGain's output, for some reason.
+
+
+## Music Scripts
+
+**arp.cs**: Sample-based sequencer driven by the beatmaker.cs script
+
+**beatmaker.cs:** Creates bangs based on tempo + subdivisions.
+
+
+## Other Scripts
+
+** ConstrainToRadius.cs** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
