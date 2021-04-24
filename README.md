@@ -23,4 +23,4 @@ Unfinished and undocumented.
 
 ## Other Scripts
 
-** ConstrainToRadius.cs** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
+**ConstrainToRadius.cs** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
