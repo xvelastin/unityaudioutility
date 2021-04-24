@@ -16,9 +16,9 @@ Unfinished and undocumented.
 
 ## Music Scripts
 
-**arp.cs**: Sample-based sequencer driven by the beatmaker.cs script
+**arp**: Sample-based sequencer driven by the beatmaker.cs script
 
-**beatmaker.cs:** Creates bangs based on tempo + subdivisions.
+**beatmaker:** Creates bangs based on tempo + subdivisions.
 
 
 ## Other Scripts
