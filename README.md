@@ -23,4 +23,6 @@ Unfinished and undocumented.
 
 ## Other Scripts
 
-**ConstrainToRadius.cs** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
+**ConstrainToRadius:** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
+
+**DistributeSoundsInEnvironment:** Randomly distributes prefabs in a given dropArea gameobject (takes scale values of a reference gameobject, eg. with a collider). Intended for distributing individual stems of larger ambiences.
