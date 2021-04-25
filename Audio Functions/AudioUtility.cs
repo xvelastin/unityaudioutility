@@ -8,6 +8,8 @@ public static class AudioUtility
     /// <summary>
     /// # atodb(float amplitude), returns db value
     /// # dbtoa(float db), returns amplitude
+    /// # getmixergroup(string groupName), returns first group
+    /// #
     /// 
     /// created by blubberbaleen, improved by bemore//
     /// </summary>
@@ -15,7 +17,7 @@ public static class AudioUtility
     private const float referenceAmplitude = 0.00001f;
     public static float ConvertAtoDb(float amp)
     {
-        amp = Mathf.Clamp(amp, ConvertDbtoA(-70f), 1f);
+        amp = Mathf.Clamp(amp, ConvertDbtoA(-80f), 1f);
         return 20 * Mathf.Log(amp) / Mathf.Log(10);
     }
 
@@ -24,6 +26,7 @@ public static class AudioUtility
         return Mathf.Pow(10, db / 20);
     }
 
+    
 
     public static AudioMixerGroup GetMixerGroup(string groupName)
     {
@@ -31,6 +34,14 @@ public static class AudioUtility
         AudioMixerGroup mixerGroup = masterMixer.FindMatchingGroups(groupName)[0];
         return mixerGroup;
     }
+
+    public static AudioMixerGroup[] GetMixerGroups(string masterMixerName)
+    {
+        AudioMixer masterMixer = Resources.Load(masterName) as AudioMixer;
+        AudioMixerGroup mixerGroups[] = masterMixer.FindMatchingGroups(groupName);
+        return mixerGroups;
+    }
+
 
 }
 
