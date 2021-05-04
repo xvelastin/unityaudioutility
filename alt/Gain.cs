@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Straightforward amplitude to decibel converter to set attached audiosource volume in db.
+/// Gain stage for audio source processing. Inputgain is visible to scripting, output gain changes directly.
 /// </summary>
 
-[ExecuteInEditMode]
 
-public class OutputGain : MonoBehaviour
+public class Gain : MonoBehaviour
 {
-    [Range(-100, 0)] public float gain = 0f;
+    [SerializeField] [Range(-100, 24)] float outputGain = 0f;
+    [Range(-100, 0)] public float inputGain = 0f;    
     [SerializeField] AudioSource audioSource;
     
     // Start is called before the first frame update
@@ -20,14 +20,16 @@ public class OutputGain : MonoBehaviour
             audioSource = GetComponent<AudioSource>();
     }
 
-    private void OnValidate()
+    private void Update()
     {
+        
         UpdateVolume();
     }
 
     public void UpdateVolume()
     {
-        audioSource.volume = AudioUtility.ConvertDbtoA(gain);
+        audioSource.volume = AudioUtility.ConvertDbtoA(outputGain + inputGain);
+
     }
 
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// Applies some noise to an attached outputGain script.
 /// </summary>
 
-public class jitterGain : MonoBehaviour
+public class JitterGain : MonoBehaviour
 {
     private OutputGain gainScript;
     private float startGain;

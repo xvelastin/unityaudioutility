@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class fadeInOnAwake : MonoBehaviour
+public class FadeInOnAwake : MonoBehaviour
 {
 
     AudioSource audiosource;
