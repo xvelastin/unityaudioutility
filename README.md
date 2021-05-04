@@ -1,6 +1,5 @@
 # unityaudioutility
 Constantly growing collection of c# scripts for Unity audio implementation.
-Unfinished and undocumented.
 
 
 ## Audio Function Scripts
