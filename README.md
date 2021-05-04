@@ -23,8 +23,6 @@ Unfinished and undocumented.
 **beatmaker:** Creates bangs based on tempo + subdivisions.
 
 
-## Other Scripts
-
 ## GameObject Scripts
 
 **ConstrainToRadius:** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
