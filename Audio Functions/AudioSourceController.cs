@@ -202,7 +202,7 @@ public class AudioSourceController : MonoBehaviour
 
         if (isFading)
         {
-            StopCoroutine(StartFadeInDb(fadetime, targetVol, animcur, stopAfterFade));
+            StopAllCoroutines();
             isFading = false;
         }
         StartCoroutine(StartFadeInDb(fadetime, targetVol, animcur, stopAfterFade));
