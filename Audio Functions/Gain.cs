@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 
 
+
 public class Gain : MonoBehaviour
 {
     [SerializeField] [Range(-100, 24)] float outputGain = 0f;
@@ -17,6 +18,8 @@ public class Gain : MonoBehaviour
     {
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
+
+        
     }
 
     public void SetGain(float value)
