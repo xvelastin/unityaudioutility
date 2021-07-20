@@ -1,17 +1,23 @@
 // By blubberbaleen. Find more at https://github.com/xvelastin/unityaudioutility //
-// v1.0 //
+// v1.2 //
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// All-in-one audiosource controller in decibels. 0db = 1.0 Volume, negative floor is around -80db. Public methods:
-/// - SetInputGain(): sets volume going into the component.
-/// - SetOutputGain(): sets volume coming out of the component (best practice is to just use input gain and to leave output gain to set the overall volume of the source - especially useful if you aren't using AudioMixerGroups).
-/// - FadeTo(): fades to a given volume (in decibels) over time. A fade curve argument applies a bend to the curve from linear (0) to exponential (1). Linear curves are good for most individual bits of audio, S-Curves (0.5) are good for music and larger textures, exponentials are good for crossfades.
-/// - PlayLoopWithInterval(): loops the clips in the clip list with an optional wait time (interval). Interval and pitch randomisation available per component in the inspector.
-/// 
+/// All-in-one audiosource controller for advanced control even with WebGL targets. Intended to be called by an Audio Manager or Events script. /// 
 /// </summary>
+/// Public methods:
+/// - SetInputGain: sets volume going into the component.
+/// - SetOutputGain: sets volume coming out of the component (best practice is to just use input gain and to leave output gain to set the overall volume of the source - especially useful if you aren't using AudioMixerGroups).
+/// - FadeTo: fades to a given volume (in decibels) over time. A fade curve argument applies a bend to the curve from linear (0) to exponential (1). Linear curves are good for most individual bits of audio, S-Curves (0.5) are good for music and larger textures, exponentials are good for crossfades.
+/// - PlayNew: replaces current clip with a new clip and plays.
+/// - PlayRandom: plays one of the clips in the Playlist list at random, with arguments for volume and pitch modulation.
+/// - PlayLoop: loops clips, selecting a new clip at random after clip end, after an interval in seconds, either using the one set in the script or as an argument.
+/// - StopLooping: stops the audio after a given wait time (a fade out would need to be called separately).
+/// 
+/// 0db = 1.0 Amplitude, negative floor is around -80db (see AudioUtility.cs). 
+/// 
 [RequireComponent(typeof(AudioSource))]
 [DisallowMultipleComponent]
 public class AudioSourceController : MonoBehaviour
@@ -21,11 +27,11 @@ public class AudioSourceController : MonoBehaviour
     [Header("Gain")] // Processing stage for audio.
     [Range(-81, 24)] public float outputGain = 0f;
     [Range(-81, 24)] public float inputGain;
+    [Range(-81, 24)] public float startingVolume;
 
     [Header("Fader")]// Controls fades.
     [Min(0)] [SerializeField] float FadeInOnAwakeTime = 0f;
-
-    public float fadeVolume;
+    [Range(-81, 24), SerializeField]  float faderVolume;
     public bool isFading;
     private IEnumerator fadeCoroutine;
     [HideInInspector] public float currentFadeTarget;
@@ -44,6 +50,21 @@ public class AudioSourceController : MonoBehaviour
     [Range(-4f, 4f)] public float pitch = 1f;
     [Range(-1f, 1f)] public float pitchRand = 0f;
     public bool looperIsLooping;
+
+    [Header("Audibility Check")]
+    public bool enableAudibilityCheck = false;
+
+
+    bool hasInit = false;
+
+    /*    DEBUGGING   */
+    private void OnValidate()
+    {
+        if (Application.isPlaying && hasInit)
+        {
+            UpdateParams();
+        }
+    }
 
 
 
@@ -64,28 +85,17 @@ public class AudioSourceController : MonoBehaviour
     {
         // disables inspector fiddling
         inputGain = 0;
-
-        if (!audioSource)
-            audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
         // Takes over audiosource functions.
         if (audioSource.isPlaying)
             audioSource.Stop();
         audioSource.loop = false;
         audioSource.playOnAwake = false;
-        audioSource.volume = 0.0f;
-        fadeVolume = AudioUtility.ConvertAtoDb(audioSource.volume);
+        audioSource.volume = AudioUtility.ConvertDbtoA(startingVolume);
+        audioSource.pitch = pitch;
+        faderVolume = startingVolume;
 
-    }
-
-
-    private void Start()
-    {
-        Initialise();
-    }
-
-    private void Initialise()
-    {
         // Chooses/plays clips as set.
         if (playlist.Count == 0)
         {
@@ -105,7 +115,23 @@ public class AudioSourceController : MonoBehaviour
             audioSource.clip = playlist[0];
 
 
-        StartCoroutine(CheckAudibility(1));
+    }
+
+    private void Start()
+    {
+        Initialise();
+        
+    }
+
+    private void Initialise()
+    {
+        
+        if (enableAudibilityCheck)
+            StartCoroutine(CheckAudibility(1));
+        else
+            StartPlayback();
+
+        hasInit = true;
 
     }
 
@@ -134,13 +160,17 @@ public class AudioSourceController : MonoBehaviour
 
         if (loopClips)
         {
-            PlayLoopWithInterval();
+            PlayLoop();
         }
+
 
         if (FadeInOnAwakeTime > 0.0f)
         {
             FadeTo(0f, FadeInOnAwakeTime, 1.0f, false);
         }
+            
+        
+        
 
     }
 
@@ -150,36 +180,75 @@ public class AudioSourceController : MonoBehaviour
 
     public bool CheckIfAudible()
     {
-        GameObject listener = AudioManager.Instance.listener;
+        var listener = AudioManager.Instance.listener;
         float distance = Vector3.Distance(transform.position, listener.transform.position);
         if (distance > audioSource.maxDistance) return false;
         else return true;
 
     }
 
-    private void GetAudioSourceVolume()
-    {
-        if (!audioSource)
-            audioSource = GetComponent<AudioSource>();
-
-        fadeVolume = AudioUtility.ConvertAtoDb(audioSource.volume);
-    }
-
 
 
     #region Player/Looper
 
-    public void PlayLoopWithInterval()
+    /// <summary>
+    /// Plays a new clip.
+    /// </summary>
+    public void PlayNew(AudioClip clip)
+    {
+        StopLooping(0);
+        audioSource.clip = clip;
+        audioSource.Play();      
+        
+    }
+
+    /// <summary>
+    /// Plays one of the clips in the Playlist list at random.
+    /// </summary>
+    /// <param name="volMin">Volume modulation minimum (in db). Offset by input gain.</param>
+    /// <param name="volMax">Volume modulation minimum (in db). Offset by input gain.</param>
+    /// <param name="pitchMin">Pitch modulation minimum.</param>
+    /// <param name="pitchMax"></param>
+    public void PlayRandom(float volMin, float volMax, float pitchMin, float pitchMax)
+    {
+        float vol = Random.Range(volMin, volMax);
+        FadeTo(vol, 0, 0.5f, false);
+
+        pitch = Random.Range(pitchMin, pitchMax);
+        audioSource.pitch = pitch;
+
+        StopLooping(0);
+
+        var randomClip = AudioUtility.RandomClipFromList(playlist);
+        audioSource.clip = randomClip;
+        
+        audioSource.Play();
+    }
+
+
+
+    ///
+    public void PlayLoop()
     {
         loopClips = true;
         loopCoroutine = ClipLooper(intervalBetweenPlays);
         StartCoroutine(loopCoroutine);
     }
+    public void PlayLoop(int interval)
+    {
+        loopClips = true;
+        loopCoroutine = ClipLooper(interval);
+        StartCoroutine(loopCoroutine);
+    }
     public void StopLooping(float fadeOutTime)
     {
         if (loopCoroutine != null) StopCoroutine(loopCoroutine);
-        StartCoroutine(StopSourceAfter(fadeOutTime));
+
+        if (fadeOutTime > 0.0f) StartCoroutine(StopSourceAfter(fadeOutTime));           
+        else audioSource.Stop();
+
         looperIsLooping = false;
+
     }
 
     private IEnumerator StopSourceAfter(float waitTime)
@@ -188,8 +257,7 @@ public class AudioSourceController : MonoBehaviour
         audioSource.Stop();
         yield break;
     }
-
-    IEnumerator ClipLooper(float interval)
+    private IEnumerator ClipLooper(float interval)
     {
         while (true)
         {
@@ -250,6 +318,21 @@ public class AudioSourceController : MonoBehaviour
 
     public void FadeTo(float targetVol, float fadetime, float curveShape, bool stopAfterFade)
     {
+        if (fadetime <= 0.0f)
+        {
+            faderVolume =  targetVol;
+            UpdateParams();
+
+            if (stopAfterFade)
+            {
+                audioSource.Stop();
+            }               
+
+            return;
+        }
+        
+        curveShape = Mathf.Clamp(curveShape, 0.0f, 1.0f);
+
         currentFadeTarget = targetVol;
         currentFadeTime = fadetime;
 
@@ -273,16 +356,14 @@ public class AudioSourceController : MonoBehaviour
 
     private IEnumerator StartFadeInDb(float fadetime, float targetVol, AnimationCurve animcur, bool stopAfterFade)
     {
-        GetAudioSourceVolume();
+        float startVol = faderVolume;
+
+        //Debug.Log(this + "on " + gameObject.name + " : Fading to " + targetVol + " from " + startVol + " over " + fadetime);
         float currentTime = 0f;
-        float startVol = fadeVolume;
-
-        // Debug.Log(this + "on " + gameObject.name + " : Fading to " + targetVol + " from " + startVol + " over " + fadetime);
-
         while (currentTime < fadetime)
         {
             currentTime += Time.deltaTime;
-            fadeVolume = Mathf.Lerp(startVol, targetVol, animcur.Evaluate(currentTime / fadetime));
+            faderVolume = Mathf.Lerp(startVol, targetVol, animcur.Evaluate(currentTime / fadetime));
 
             UpdateParams();
             yield return null;
@@ -292,21 +373,16 @@ public class AudioSourceController : MonoBehaviour
 
         if (stopAfterFade)
         {
-            //yield return new WaitForSeconds(fadetime);
-            audioSource.Stop();
+            if (looperIsLooping) StopLooping(0);
+            else audioSource.Stop();
         }
 
         yield break;
     }
 
-    private float GetGain()
-    {
-        return inputGain + fadeVolume + outputGain;
-    }
-
     private void UpdateParams()
     {
-        float currentVol = GetGain();
+        float currentVol = inputGain + faderVolume + outputGain;
         audioSource.volume = AudioUtility.ConvertDbtoA(currentVol);
     }
 
