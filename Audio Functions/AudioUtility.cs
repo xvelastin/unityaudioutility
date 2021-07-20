@@ -18,8 +18,6 @@ public static class AudioUtility
         return Mathf.Pow(10, db / 20);
     }
 
-
-
     public static AudioClip RandomClipFromArray(AudioClip[] cliplist)
     {
         return cliplist[Mathf.Clamp(0, Random.Range(0, cliplist.Length), cliplist.Length)];
