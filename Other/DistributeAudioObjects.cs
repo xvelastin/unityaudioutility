@@ -6,6 +6,8 @@ using UnityEngine;
 /// Randomly distributes prefabs in a given dropArea gameobject (takes scale values of a reference gameobject, eg. with a collider). Intended for looping stems of larger ambiences.
 /// </summary>
 
+// nb: script is under construction, copy at your own risk.
+
 public class DistributeAudioObjects : MonoBehaviour
 {
     [SerializeField] AudioClip clipToDistribute;
@@ -14,19 +16,19 @@ public class DistributeAudioObjects : MonoBehaviour
     [SerializeField] GameObject dropArea;
     Vector3 dropAreaSize;
 
-    [SerializeField] [Range(-100, 0)] float createdObjectGain;
-    [SerializeField] [Range(-4f, 4f)] float pitchOffset;
-    [SerializeField] float randomPitchRange;
-
-    [SerializeField] bool PlayOnAwake = false;
+    [SerializeField] bool DistributeOnAwake = false;
 
     public List<GameObject> createdAudioObjects = new List<GameObject>();
 
 
     private void Start()
     {
-        dropAreaSize = dropArea.transform.localScale;
-        
+        if (DistributeOnAwake) DistributeSounds();
+    }
+
+    public void DistributeSounds() 
+    {
+        dropAreaSize = dropArea.transform.localScale;        
 
         for (int i = 0; i < numberOfSoundsToDistribute; ++i)
         {
@@ -42,24 +44,10 @@ public class DistributeAudioObjects : MonoBehaviour
             createdAudioObjects.Add(go);
 
             var audiosource = go.GetComponent<AudioSource>();
-            audiosource.clip = clipToDistribute;
-            audiosource.pitch += pitchOffset + Random.Range(-randomPitchRange, randomPitchRange);                       
-            audiosource.time = audiosource.clip.length * Random.Range(0, 1);
-
-            //vol
-            if (audiosource.GetComponent<AudioSourceFader>())            
-                audiosource.GetComponent<AudioSourceFader>().outputGain = createdObjectGain;            
-            else
-                audiosource.volume = AudioUtility.ConvertDbtoA(createdObjectGain);
-
-           
-
-            if (PlayOnAwake)
-                audiosource.Play();
+            audiosource.clip = clipToDistribute;                 
+            audiosource.time = (audiosource.clip.length / audiosource.pitch) * Random.Range(0, 1);
         }
 
         this.gameObject.name = this.gameObject.name + "(x" + numberOfSoundsToDistribute + ")";
-
     }
-
 }
