@@ -1,5 +1,5 @@
 // By blubberbaleen. Find more at https://github.com/xvelastin/unityaudioutility //
-// v1.2 //
+// v1.21 - 20 Sept 2021 //
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,7 @@ using UnityEngine;
 /// Public methods:
 /// - SetInputGain: sets volume going into the component.
 /// - SetOutputGain: sets volume coming out of the component (best practice is to just use input gain and to leave output gain to set the overall volume of the source - especially useful if you aren't using AudioMixerGroups).
-/// - FadeTo: fades to a given volume (in decibels) over time. A fade curve argument applies a bend to the curve from linear (0) to exponential (1). Linear curves are good for most individual bits of audio, S-Curves (0.5) are good for music and larger textures, exponentials are good for crossfades.
+/// - FadeTo: fades to a given volume (in decibels) over time. A fade curve argument applies a bend to the curve from exponential (0) to logarithmic (1). Exponential curves are good for realism, S-Curves (0.5) are good for music and larger textures, logarithmic curves are good for crossfades.
 /// - PlayNew: replaces current clip with a new clip and plays.
 /// - PlayRandom: plays one of the clips in the Playlist list at random, with arguments for volume and pitch modulation.
 /// - PlayLoop: loops clips, selecting a new clip at random after clip end, after an interval in seconds, either using the one set in the script or as an argument.
@@ -337,10 +337,10 @@ public class AudioSourceController : MonoBehaviour
         currentFadeTime = fadetime;
 
         // Uses an AnimationCurve
-        // curveShape 0.0 = linear; curveShape 0.5 = s-curve; curveshape 1.0 (exponential).
+        // curveShape 0.0 = ramps up (exponential); curveShape 0.5 = s-curve; curveshape 1.0 ramps down (logarithmic).
         Keyframe[] keys = new Keyframe[2];
-        keys[0] = new Keyframe(0, 0, 0, 1f - curveShape, 0, 1f - curveShape);
-        keys[1] = new Keyframe(1, 1, 1f - curveShape, 0f, curveShape, 0);
+        keys[0] = new Keyframe(0, 0, 0, Mathf.Sin(curveShape), 0, 1.0f - curveShape);
+        keys[1] = new Keyframe(1, 1, 1 - curveShape, 0, curveShape, 0);
         AnimationCurve animcur = new AnimationCurve(keys);
 
         if (isFading)
