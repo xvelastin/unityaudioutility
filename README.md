@@ -6,9 +6,7 @@ Constantly growing collection of c# scripts for Unity audio implementation. They
 
 **AudioSourceController:** An all-in-one controller for audio sources that amalgamates the audiosourcefader (for fades), gain (for db conversion) and audiosourceplayer (for multi-clip looping).
 
-**AudioSourceFader:** Creates natural sounding fades that can be accessed without any scripting (Unity Events). Attach to a gameobject in a scene with an audiosource component. Fade curve editable in inspector or with an argument (c# calls only). Created for Limbik Theatre's audio play Pangea.
-
-**AudioUtility:** a stanley knife of useful tools.
+**AudioUtility:** a stanley knife of useful tools, most of my other scripts use it.
 
 **fadeInOnAwake:** very simple script, does what it says.
 
