@@ -3,42 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
+/// <summary>
+/// Contains often-used values and functions.
+/// </summary>
 public static class AudioUtility
 {
-    public static float minimum = -81f;
+    /// <summary>
+    /// Returns the universal minimum db value.
+    /// </summary>
+    public static float minimum = -70.0f;
 
-    public static float ConvertAtoDb(float amp)
+    /// <summary>
+    /// Converts amplitude (0-1) as used in native Unity to the logarithmic decibel scale.
+    /// </summary>
+    /// <param name="amplitude"></param>
+    /// <returns></returns>
+    public static float ConvertAmplitudetoDb(float amplitude)
     {
-        amp = Mathf.Clamp(amp, ConvertDbtoA(minimum), 1f);
-        return 20 * Mathf.Log(amp) / Mathf.Log(10);
+        amplitude = Mathf.Clamp(amplitude, ConvertDbtoAmplitude(minimum), 1f);
+        return 20 * Mathf.Log(amplitude) / Mathf.Log(10);
     }
 
-    public static float ConvertDbtoA(float db)
+    /// <summary>
+    /// Converts decibels to amplitude (0-1) for use in Unity's Audio Source component.
+    /// </summary>
+    /// <param name="decibels"></param>
+    /// <returns></returns>
+    public static float ConvertDbtoAmplitude(float decibels)
     {
-        return Mathf.Pow(10, db / 20);
+        return Mathf.Pow(10, decibels / 20);
     }
 
-    public static AudioClip RandomClipFromArray(AudioClip[] cliplist)
-    {
-        return cliplist[Mathf.Clamp(0, Random.Range(0, cliplist.Length), cliplist.Length)];
-    }
-    public static AudioClip RandomClipFromList(List<AudioClip> cliplist)
-    {
-        return cliplist[Mathf.Clamp(0, Random.Range(0, cliplist.Count), cliplist.Count)];
-    }
-
-
-
-    public static float ScaleValue(float value, float originalStart, float originalEnd, float newStart, float newEnd)
+    public static float MapToRange(float value, float originalStart, float originalEnd, float newStart, float newEnd)
     {
         // credit to Wim Coenen, https://stackoverflow.com/questions/4229662/convert-numbers-within-a-range-to-numbers-within-another-range //
         double scale = (double)(newEnd - newStart) / (originalEnd - originalStart);
         return (float)(newStart + ((value - originalStart) * scale));
     }
-
-
-
-
 
     public static AudioMixerGroup GetMixerGroup(string groupName)
     {
@@ -46,7 +47,6 @@ public static class AudioUtility
         AudioMixerGroup mixerGroup = masterMixer.FindMatchingGroups(groupName)[0];
         return mixerGroup;
     }
-
 
     private static IEnumerator FadeAudioSource(AudioSource source, float fadetime, float targetVol, float curveShape, bool stopAfterFade)
     {
@@ -56,7 +56,9 @@ public static class AudioUtility
         AnimationCurve animcur = new AnimationCurve(keys);
 
         if (source.gameObject.GetComponent<AudioSource>())
-            source = source.gameObject.GetComponent<AudioSource>();
+        {
+ source = source.gameObject.GetComponent<AudioSource>();
+        }
 
         float startVol = ConvertAtoDb(source.volume);
         float currentFadeVolume = startVol;
@@ -66,7 +68,7 @@ public static class AudioUtility
         {
             currentTime += Time.deltaTime;
             currentFadeVolume = Mathf.Lerp(startVol, targetVol, animcur.Evaluate(currentTime / fadetime));
-            source.volume = ConvertDbtoA(currentFadeVolume);
+            source.volume = ConvertDbtoAmplitude(currentFadeVolume);
             yield return null;
         }
 
