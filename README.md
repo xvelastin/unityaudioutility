@@ -1,12 +1,12 @@
 # unityaudioutility
-Constantly growing collection of c# scripts for Unity audio implementation. They're all currently still in testing and as such might be crap. Let me know.
+Constantly growing collection of c# scripts for Unity audio implementation.
 
 
 ## Audio Function Scripts
 
-**AudioSourceController:** An all-in-one controller for audio sources that amalgamates the audiosourcefader (for fades), gain (for db conversion) and audiosourceplayer (for multi-clip looping).
+**AudioSourceController:** An all-in-one controller for audio sources that does: precise curve-based fading, decibel range volume editing and multi-clip playback with randomisation and pitch/volume modulation.
 
-**AudioUtility:** a stanley knife of useful tools, most of my other scripts use it.
+**AudioUtility:** a stanley knife of useful tools, most of my other scripts call it.
 
 **fadeInOnAwake:** very simple script, does what it says.
 
