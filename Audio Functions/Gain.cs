@@ -25,7 +25,7 @@ public class Gain : MonoBehaviour
     public void SetGain(float value)
     {
         inputGain = value;
-        audioSource.volume = AudioUtility.ConvertDbtoA(outputGain + inputGain);
+        audioSource.volume = AudioUtility.ConvertDbtoAmplitude(outputGain + inputGain);
     }
 
 

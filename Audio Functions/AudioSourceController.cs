@@ -11,17 +11,19 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class AudioSourceController : MonoBehaviour
 {
-    [Header("Gain")] 
+    public AudioSource source;
+
+    [Header("Gain")]
     [Range(-70, 12)] public float outputGain = 0.0f;
     [Range(-70, 12)] public float inputGain = 0.0f;
     [Range(-70, 12)] public float startingVolume = 0.0f;
 
-    [Header("Fader")] 
-    [Min(0)] public float fadeInOnAwakeTime = 0.0f;
+    [Header("Fader")]
     [Range(-70, 12)] public float faderVolume = 0.0f;
+    [Min(0)] public float fadeInOnAwakeTime = 0.0f;    
     public bool isFading = false;
 
-    [Header("Clip Player")] 
+    [Header("Clip Player")]
     public List<AudioClip> playlist = new List<AudioClip>();
     public bool playOnAwake = false;
     public bool loopClips = false;
@@ -30,12 +32,13 @@ public class AudioSourceController : MonoBehaviour
     public float intervalRand = 0.0f;
     [Range(-3f, 3f)] public float pitch = 1f;
     [Range(-1f, 1f)] public float pitchRand = 0f;
+    public bool isPlaying { get { return source.isPlaying; } }
     public bool looperIsLooping;
 
-    private AudioSource source;
     private IEnumerator fadeCoroutine;
     private IEnumerator loopCoroutine;
     private bool hasInit = false;
+    
 
     #region Initialisation
     private void Awake()
@@ -47,7 +50,7 @@ public class AudioSourceController : MonoBehaviour
         if (source.isPlaying)
         {
             source.Stop();
-        }            
+        }
         source.loop = false;
         source.playOnAwake = false;
         source.volume = AudioUtility.ConvertDbtoAmplitude(startingVolume);
@@ -87,13 +90,15 @@ public class AudioSourceController : MonoBehaviour
     {
         if (playOnAwake)
         {
-            source.pitch = pitch + Random.Range(-pitchRand, pitchRand);
-            source.Play();
-        }
-
-        if (loopClips)
-        {
-            PlayLoop();
+            if (loopClips)
+            {
+                PlayLoop();
+            }
+            else
+            {
+                source.pitch = pitch + Random.Range(-pitchRand, pitchRand);
+                source.Play();
+            }
         }
 
         if (fadeInOnAwakeTime > 0.0f)
@@ -122,7 +127,8 @@ public class AudioSourceController : MonoBehaviour
     {
         StopLooping(0);
         AudioClip randomClip = GetRandomClipFromList(playlist);
-        source.clip = randomClip;        
+        source.clip = randomClip;
+        source.pitch = ModulatePitch();
         source.Play();
     }
 

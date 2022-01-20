@@ -20,7 +20,7 @@ public class ConstrainToRadius : MonoBehaviour
     }
 
 
-    private void Update()
+    private void LateUpdate()
     {
         // Follow target smoothly
         Vector3 newPos = Vector3.MoveTowards(transform.position, targetTransform.position, 2f);
@@ -35,8 +35,6 @@ public class ConstrainToRadius : MonoBehaviour
 
     public static Vector3 ClampMagnitude(Vector3 v, float max, float min)
     {
-        // credit to lord of duct: *https://forum.unity.com/threads/clampmagnitude-why-no-minimum.388488/* //
-
         double sm = v.sqrMagnitude;
         if (sm > (double)max * (double)max) return v.normalized * max;
         else if (sm < (double)min * (double)min) return v.normalized * min;
@@ -44,3 +42,5 @@ public class ConstrainToRadius : MonoBehaviour
     }
 
 }
+
+// credit to lord of duct: *https://forum.unity.com/threads/clampmagnitude-why-no-minimum.388488/* //

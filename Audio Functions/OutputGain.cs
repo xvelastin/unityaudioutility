@@ -27,7 +27,7 @@ public class OutputGain : MonoBehaviour
 
     public void UpdateVolume()
     {
-        audioSource.volume = AudioUtility.ConvertDbtoA(gain);
+        audioSource.volume = AudioUtility.ConvertDbtoAmplitude(gain);
     }
 
 }
