@@ -1,4 +1,4 @@
-# unityaudioutility
+# Unity Audio Utility
 
 Constantly growing collection of c# scripts for Unity audio implementation.
 
@@ -19,3 +19,17 @@ Constantly growing collection of c# scripts for Unity audio implementation.
 **ConstrainToRadius:** Constrains a gameobject to a given radius around another gameobject while following a third gameobject. Created to confine the sounds of waves to the edges of a lake.
 
 **DistributeSoundObjects:** Randomly distributes prefabs in a given dropArea gameobject (takes scale values of a reference gameobject, eg. with a collider). Intended for distributing individual stems of larger ambiences eg. bird audio objects in a forest area.
+  
+  
+# Screenshots
+  Dialogue Playback
+  
+![Screenshot from the Unity Inspector for DialoguePlayback](/img/DialoguePlayback_Inspector.jpg)
+  
+  XQ-Linear Show Control
+  
+  ![Screenshot from the Unity Inspector for XQ-LSC](/img/xqprototype_qlistscreenshot.jpg)
+  
+  
+  DistributeAudioObjects
+  ![Screenshot from Unity for DistributeAudioObjects](/img/distributeaudioobjects.png)
