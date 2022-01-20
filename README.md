@@ -16,8 +16,8 @@ Constantly growing collection of c# scripts for Unity audio implementation.
 
 **[DistributeSoundObjects](GameObject%20Control/DistributeAudioObjects.cs):** Randomly distributes prefabs in a given dropArea gameobject (takes scale values of a reference gameobject, eg. with a collider). Intended for distributing individual stems of larger ambiences eg. bird audio objects in a forest area.
   
-  # Get In Touch
-  You can contact me on discord (blubberbaleen#2086) for complaints, feedback and praise. If you'd like to work together on your next gaming project, you can find my portfolio over at my [website](https://www.xaviervelastin.com/gameaudio).  
+# Get In Touch
+You can contact me on discord (blubberbaleen#2086) for complaints, feedback and praise. If you'd like to work together on your next Unity project, you can find my portfolio over at my [website](https://www.xaviervelastin.com/gameaudio).  
   
   
 # Screenshots
