@@ -16,6 +16,8 @@ public class DistributeAudioObjects : MonoBehaviour
 
     private Vector3 dropAreaSize;
     private string originalName;
+    private bool listIsEmpty = true;
+    private int audioObjectsLength { get { return createdAudioObjects.Count; } }
 
     /// <summary>
     /// Distributes the audio object prefabs in the area defined by the Drop Area object's size.
@@ -35,10 +37,13 @@ public class DistributeAudioObjects : MonoBehaviour
 
             GameObject newObj = Instantiate<GameObject>(audioObjectPrefab, this.transform, true);
             newObj.transform.position = randomPoint;
-            newObj.name = this.gameObject.name + "-" + i;
+
+            // Assigns name based on index.
+            newObj.name = originalName + "-" + audioObjectsLength;
 
             // Hold a reference to the created object in a List.
             createdAudioObjects.Add(newObj);
+            Debug.Log("number of sounds created: " + audioObjectsLength);
 
             // Assign the clip to the audiosource and randomise its starting position, to give variety.
             AudioSource source = newObj.GetComponent<AudioSource>();
@@ -50,9 +55,15 @@ public class DistributeAudioObjects : MonoBehaviour
                 source.Play();
             }
         }
-        // Renames this object to mark how many children it has, stores old name in case of ClearList.
-        originalName = gameObject.name;
-        gameObject.name = gameObject.name + "(x" + numberOfSoundsToDistribute + ")";
+
+        // If first time, stores the original name, then renames this object with a suffix of how many children it has.
+        if (listIsEmpty)
+        {
+            originalName = gameObject.name;
+        }
+        gameObject.name = $"{originalName}(x{audioObjectsLength})";
+
+        listIsEmpty = false;
     }
 
     /// <summary>
@@ -66,5 +77,7 @@ public class DistributeAudioObjects : MonoBehaviour
         }
         createdAudioObjects = new List<GameObject>();
         gameObject.name = originalName;
+
+        listIsEmpty = true;
     }
 }

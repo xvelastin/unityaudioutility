@@ -1,3 +1,5 @@
+// This script must be placed in "/Assets/Editor" in order to work. If it is in a different folder, builds may fail.
+
 using UnityEngine;
 using UnityEditor;
 
