@@ -42,13 +42,13 @@ namespace XV
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    curveProperty.animationCurveValue = Draw(curveShapeProperty.floatValue, directionAsEnum);
+                    curveProperty.animationCurveValue = DrawCurve(curveShapeProperty.floatValue, directionAsEnum);
                 }
                 else
                 {
                     if (curveProperty.animationCurveValue.keys.Length < 2)
                     {
-                        curveProperty.animationCurveValue = Draw(0.5f, directionAsEnum);
+                        curveProperty.animationCurveValue = DrawCurve(0.5f, directionAsEnum);
                     }
                 }
 
@@ -69,41 +69,6 @@ namespace XV
         {
             var baseHeight = (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * 3;
             return _isOpen ? baseHeight + CurveFieldHeight : EditorGUIUtility.singleLineHeight;
-        }
-
-        private static AnimationCurve Draw(float curveShape, ECurveDirection directionType)
-        {
-            var keys = new Keyframe[2];
-            const float curveBendFactor = 3.0f;
-            
-            if (directionType == ECurveDirection.In)
-            {
-                curveShape = 1 - curveShape;
-                if (curveShape < 0.5f)
-                {
-                    keys[0] = new Keyframe(0, 0, 0, Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor);
-                    keys[1] = new Keyframe(1, 1);
-                }
-                else
-                {
-                    keys[0] = new Keyframe(0, 0);
-                    keys[1] = new Keyframe(1, 1, -Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor, 0);
-                }
-            }
-            else
-            {
-                if (curveShape < 0.5f)
-                {
-                    keys[0] = new Keyframe(0, 1, 0, -Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor);
-                    keys[1] = new Keyframe(1, 0);
-                }
-                else
-                {
-                    keys[0] = new Keyframe(0, 1);
-                    keys[1] = new Keyframe(1, 0, Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor, 0);
-                }
-            }
-            return new AnimationCurve(keys);
         }
     }
 }

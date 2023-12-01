@@ -162,6 +162,41 @@ namespace XV
             {
                 Direction = direction;
             }
+            
+            public static AnimationCurve DrawCurve(float curveShape, ECurveDirection directionType)
+            {
+                var keys = new Keyframe[2];
+                const float curveBendFactor = 3.0f;
+            
+                if (directionType == ECurveDirection.In)
+                {
+                    curveShape = 1 - curveShape;
+                    if (curveShape < 0.5f)
+                    {
+                        keys[0] = new Keyframe(0, 0, 0, Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor);
+                        keys[1] = new Keyframe(1, 1);
+                    }
+                    else
+                    {
+                        keys[0] = new Keyframe(0, 0);
+                        keys[1] = new Keyframe(1, 1, -Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor, 0);
+                    }
+                }
+                else
+                {
+                    if (curveShape < 0.5f)
+                    {
+                        keys[0] = new Keyframe(0, 1, 0, -Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor);
+                        keys[1] = new Keyframe(1, 0);
+                    }
+                    else
+                    {
+                        keys[0] = new Keyframe(0, 1);
+                        keys[1] = new Keyframe(1, 0, Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor, 0);
+                    }
+                }
+                return new AnimationCurve(keys);
+            }
         }
         
         #endregion
@@ -854,7 +889,7 @@ namespace XV
 
             private IEnumerator Fade(float origin, float destination, float fadeTime, FadeSettings settings)
             {
-                var animationCurve = settings.Curve;
+                var animationCurve = settings.Curve.keys.Length > 2 ? settings.Curve : FadeSettings.DrawCurve(settings.CurveShape, settings.Direction);
                 var direction = settings.Direction;
 
                 if (fadeTime <= 0.0f)
