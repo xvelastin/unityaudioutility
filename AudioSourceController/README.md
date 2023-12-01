@@ -5,7 +5,8 @@ An all-in-one script that extends Unity's built-in Audio Source component design
 ## Overview
 
 A video showing the main functions of the Audio Source Controller:
-[<img src="../img/asc_vid_thumb.png">](https://youtu.be/kCCt9cnDWzs)
+
+[![Audio Source Controller 2.0](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FkCCt9cnDWzs)](https://youtu.be/kCCt9cnDWzs)
 
 ## Installation
 
@@ -14,8 +15,6 @@ Just copy the AudioSourceController.cs file into your Unity Assets folder. For b
 Test it's working by adding some clips to the `Playlist`, and calling Play and Stop, for example using `Input.GetKeyPressed` or connecting a button press to the different functions.
 
 ## Breakdown
-
-![Screenshot from the Unity Inspector for Audio Source Controller](../img/asc_2.0_inspector.png)
 
 The Audio Source Controller (ASC) can be broken down into Playback, Parameters, Fades and Events.
 
@@ -106,3 +105,7 @@ The ASC also produces several callbacks which can be connected to other gameplay
 ## Testing
 
 If you're using the Audio Source Controller in a project I'd love to hear what worked/didn't work. I'm open to any suggestions for features to be added to later versions!
+
+~
+
+![Screenshot from the Unity Inspector for Audio Source Controller](../img/asc_2.0_inspector.png)
