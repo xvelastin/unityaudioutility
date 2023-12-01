@@ -53,13 +53,6 @@ public static class AudioUtility
     /// <returns></returns>
     public static float ToPitch(float semitones) => Mathf.Pow(2, semitones / 12);
 
-    public static float MapToRange(float value, float originalStart, float originalEnd, float newStart, float newEnd)
-    {
-        // credit to Wim Coenen //
-        double scale = (double)(newEnd - newStart) / (originalEnd - originalStart);
-        return (float)(newStart + ((value - originalStart) * scale));
-    }
-
     /// <summary>
     /// Interpolates between the volume of an Audio Source and a target volume over a given duration with a configurable fade curve. Remember to cancel any ongoing fades when triggering.
     /// </summary>
@@ -77,11 +70,7 @@ public static class AudioUtility
             yield break;
         }
 
-        // Creates an Animation Curve with Curve Shape to evaluate the fade over time.
-        Keyframe[] keys = new Keyframe[2];
-        keys[0] = new Keyframe(0, 0, 0, Mathf.Sin(curveShape), 0, 1.0f - curveShape);
-        keys[1] = new Keyframe(1, 1, 1 - curveShape, 0, curveShape, 0);
-        AnimationCurve fadeCurve = new AnimationCurve(keys);
+        var fadeCurve = DrawFadeCurve(curveShape);
 
         float startingVolume = ToDecibels(source.volume);
         float currentFadeVolume = startingVolume;
@@ -101,5 +90,31 @@ public static class AudioUtility
         }
 
         yield break;
+    }
+    
+    /// <summary>
+    /// Returns a curve which can be used to evaluate a fade over time.
+    /// </summary>
+    /// <param name="curveShape">A value between 0-1 which defines the curvature of the fade. 0 = starts slow, gets faster: good for natural fades. 1 = starts fast, gets slower: good for transitions. 0.5 = fast in the middle, slow at the start and end (an s-curve): good for most situations.</param>
+    /// <returns></returns>
+    public static AnimationCurve DrawFadeCurve(float curveShape)
+    {
+        curveShape = Mathf.Clamp01(curveShape);
+        var keys = new Keyframe[2];
+        const float curveBendFactor = 3.0f;
+            
+        curveShape = 1 - curveShape;
+        if (curveShape < 0.5f)
+        {
+            keys[0] = new Keyframe(0, 0, 0, Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor);
+            keys[1] = new Keyframe(1, 1);
+        }
+        else
+        {
+            keys[0] = new Keyframe(0, 0);
+            keys[1] = new Keyframe(1, 1, -Mathf.Cos(curveShape * Mathf.PI) * curveBendFactor, 0);
+        }
+            
+        return new AnimationCurve(keys);
     }
 }
