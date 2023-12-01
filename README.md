@@ -6,7 +6,7 @@ Constantly growing collection of c# scripts for Unity audio implementation.
 
 **[AudioSourceController](AudioSourceController/AudioSourceController.cs):** An all-in-one script that extends Unity's built-in Audio Source component designed with solo devs and game jammers in mind. Handles various advanced playback techniques including looping multiple clips, lots of randomisation, highly customisable fades and callbacks.
 
-**[AudioUtility / DevUtils](Utility/AudioUtility.cs):** a stanley knife of useful tools for audio, like decibel conversion and creating fade curves.
+**[AudioUtility](Utility/AudioUtility.cs):** a stanley knife of useful tools for audio, like decibel conversion and creating fade curves.
 
 **[DevUtils](Utility/DevUtils.cs)** Some common functions I find I use a lot in implementation like range mapping and parameter modulation, and an in-progress audio logger.
 
