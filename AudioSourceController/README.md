@@ -10,7 +10,7 @@ A video showing the main functions of the Audio Source Controller:
 
 ## Installation
 
-Just copy the AudioSourceController.cs file into your Unity Assets folder. For best results, use the custom property drawers found in the Editor folder. Make sure they're in a folder marked Editor in your Assets folder or they tend to wreak havoc on builds, especially WebGL.
+Just copy the [AudioSourceController.cs](AudioSourceController.cs) file into your Unity Assets folder. For best results, use the custom property drawers found in the Editor folder. Make sure they're in a folder marked Editor in your Assets folder or they tend to wreak havoc on builds, especially WebGL.
 
 Test it's working by adding some clips to the `Playlist`, and calling Play and Stop, for example using `Input.GetKeyPressed` or connecting a button press to the different functions.
 
