@@ -4,7 +4,8 @@ An all-in-one script that extends Unity's built-in Audio Source component design
 
 ## Overview
 
-![A video showing the main functions of the Audio Source Controller.](https://youtu.be/kCCt9cnDWzs)
+A video showing the main functions of the Audio Source Controller:
+[<img src="../img/asc_vid_thumb.png">](https://youtu.be/kCCt9cnDWzs)
 
 ## Installation
 
