@@ -22,27 +22,27 @@ The Audio Source Controller (ASC) can be broken down into Playback, Parameters, 
 
 #### Functions
 
-**Play**: Plays a clip from the Playlist with the current volume, pitch and delay settings.
+`Play`: Plays a clip from the Playlist with the current volume, pitch and delay settings.
 
-**Pause**: Pauses playback. A short fade out is applied of the duration set in `PauseFadeTime` (default: 0.2s) to avoid audible pops.
+`Pause`: Pauses playback. A short fade out is applied of the duration set in `PauseFadeTime` (default: 0.2s) to avoid audible pops.
 
-**UnPause**: Unpauses playback. A fade in is applied of the same length as above.
+`UnPause`: Unpauses playback. A fade in is applied of the same length as above.
 
-**TogglePaused**: Switches between paused and unpaused states.
+`TogglePaused`: Switches between paused and unpaused states.
 
-**Stop**: Stops all playback from the Playlist.
+`Stop`: Stops all playback from the Playlist.
 
-**StopLooping**: Stops the looper, but doesn't stop the current clip or trigger any fade outs.
+`StopLooping`: Stops the looper, but doesn't stop the current clip or trigger any fade outs.
 
 #### Settings
 
 A list of Audio Clips are held by the ASC in `Playlist`, although the current clip can be directly assigned in code by setting `Clip`. The way the clips are chosen from the playlist depends on the other playback settings, mainly `Playback Behaviour`:
 
-**Single**: Repeats the last clip (or first in the Playlist if playing for the first time). If looping with no delay, this behaves just like the Unity native looper so can still be used with seamless loops.
+`Single`: Repeats the last clip (or first in the Playlist if playing for the first time). If looping with no delay, this behaves just like the Unity native looper so can still be used with seamless loops.
 
-**Sequential**: Plays the next clip in order. Useful for creating music playlists, for example.
+`Sequential`: Plays the next clip in order. Useful for creating music playlists, for example.
 
-**Random**: Chooses a new clip at random. It keeps track of the last few clips that have been played, according to the `Avoid Repeating` setting, and avoids playing those clips until others have been played first, which is a good way of reducing audible repetition for easily recognisable sounds like vocal barks.
+`Random`: Chooses a new clip at random. It keeps track of the last few clips that have been played, according to the `Avoid Repeating` setting, and avoids playing those clips until others have been played first, which is a good way of reducing audible repetition for easily recognisable sounds like vocal barks.
 
 You are able to loop all types of playback behaviour.
 
@@ -70,11 +70,11 @@ If looping is disabled, delay is applied **before** the clip plays. This is usef
 
 #### Functions
 
-**FadeIn** Fades in to the set Volume level over the duration set in Fade In Settings. Note this will not play the sound.
+`FadeIn` Fades in to the set Volume level over the duration set in Fade In Settings. Note this will not play the sound.
 
-**FadeOut** Fades out to silence over the duration set in Fade Out Settings. Note this will not stop the sound after finishing.
+`FadeOut` Fades out to silence over the duration set in Fade Out Settings. Note this will not stop the sound after finishing.
 
-**FadeTo** Fades to the given volume level over a given duration. If the target level is higher than the current volume, it will use the Fade In Curve; otherwise it'll use the Fade Out Curve.
+`FadeTo` Fades to the given volume level over a given duration. If the target level is higher than the current volume, it will use the Fade In Curve; otherwise it'll use the Fade Out Curve.
 
 #### Settings
 
@@ -83,11 +83,11 @@ The fade time is adjustable with the `Duration`. If set to zero this will techni
 
 The actual curve defines the rate at which the volume changes over time. It can be adjusted either directly (it's an animation curve) or by using the `Curve Shape` slider to interpolate between an exponential curve at 0, an s-curve at 0.5 and a logarithmic curve at 1.
 
-**Exponential**: Starts slowly and gets faster. Great for realistic-sounding fades and especially long fade-outs.
+`Exponential`: Starts slowly and gets faster. Great for realistic-sounding fades and especially long fade-outs.
 
-**Logarithmic**: A constant power-like fade, starts quickly and then slows down. Great for transitions and crossfades.
+`Logarithmic`: A constant power-like fade, starts quickly and then slows down. Great for transitions and crossfades.
 
-**S-Curve**: A smooth fade suitable for most situations, although performs better with shorter fades.
+`S-Curve`: A smooth fade suitable for most situations, although performs better with shorter fades.
 
 As mentioned above, `FadeInOnEachPlay` re-triggers the fade each time Play is called, meaning the Fade In works more as an attack envelope, and lets you shape the sound a bit.
 
@@ -95,11 +95,11 @@ As mentioned above, `FadeInOnEachPlay` re-triggers the fade each time Play is ca
 
 The ASC also produces several callbacks which can be connected to other gameplay elements or to help when managing them.
 
-**OnPlay**: Triggers whenever a new clip is selected and played.
+`OnPlay`: Triggers whenever a new clip is selected and played.
 
-**OnStop**: Triggers whenever Stop is triggered. Only triggers if it's already playing. This starts before any fade out but does allow for any wait time invoked by `Let Clip Finish`.
+`OnStop`: Triggers whenever Stop is triggered. Only triggers if it's already playing. This starts before any fade out but does allow for any wait time invoked by `Let Clip Finish`.
 
-**OnFinishedPlaying**: Triggers once ASC is certain there is no clip playing and no loop active. Does not apply to sounds triggered with `PlayOneShot` as they are not tracked. This may not trigger exactly when the sound audibly ends. It's better used to find out for sure that the source can be disabled, destroyed or moved eg. for pooling.
+`OnFinishedPlaying`: Triggers once ASC is certain there is no clip playing and no loop active. Does not apply to sounds triggered with `PlayOneShot` as they are not tracked. This may not trigger exactly when the sound audibly ends. It's better used to find out for sure that the source can be disabled, destroyed or moved eg. for pooling.
  
 
 ## Testing
