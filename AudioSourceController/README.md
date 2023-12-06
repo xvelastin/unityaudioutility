@@ -20,6 +20,8 @@ The Audio Source Controller (ASC) can be broken down into Playback, Parameters, 
 
 ### Playback
 
+![The Playback section from the Inspector for the Audio Source Controller](../img/asc/asc_2.0_playback.png)
+
 #### Functions
 
 `Play`: Plays a clip from the Playlist with the current volume, pitch and delay settings.
@@ -52,6 +54,8 @@ Finally, if `LetClipFinish` is enabled, the ASC will wait until the current clip
 
 ### Parameters
 
+![The Parameters section from the Inspector for the Audio Source Controller](../img/asc/asc_2.0_parameters.png)
+
 #### Settings
 
 Each parameter (`Volume`, `Pitch` and `Delay`) follow the same pattern in the Inspector and code structure. The holding of the actual value internally, and the one that connects to the Audio Source component, is not directly accessible but can be accessed either through the Inspector through the serialised Parameter class or in code through a property of the same name (`ASC.Volume`, for example). 
@@ -67,6 +71,8 @@ Pitch is in **semitones**, which again is because it's more intuitive. The defau
 If looping is disabled, delay is applied **before** the clip plays. This is useful when lining up sounds with other sounds without having to create coroutines at the point of triggering, or for linking with visual effects which have different timing. If looping is enabled, it is applied **between** clips being played. I've used this for example in an ASC that handled birdsong in a forest environment, playing back different bird calls every 10-15 seconds.
 
 ### Fade
+
+![The Fade section from the Inspector for the Audio Source Controller](../img/asc/asc_2.0_fader.png)
 
 #### Functions
 
@@ -93,6 +99,8 @@ As mentioned above, `FadeInOnEachPlay` re-triggers the fade each time Play is ca
 
 ### Events
 
+![The Events section from the Inspector for the Audio Source Controller](../img/asc/asc_2.0_events.png)
+
 The ASC also produces several callbacks which can be connected to other gameplay elements or to help when managing them.
 
 `OnPlay`: Triggers whenever a new clip is selected and played.
@@ -105,7 +113,3 @@ The ASC also produces several callbacks which can be connected to other gameplay
 ## Testing
 
 If you're using the Audio Source Controller in a project I'd love to hear what worked/didn't work. I'm open to any suggestions for features to be added to later versions!
-
-~
-
-![Screenshot from the Unity Inspector for Audio Source Controller](../img/asc_2.0_inspector.png)
